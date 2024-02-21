@@ -25,3 +25,22 @@ args = parser.parse_args()
 
 if args.l:
     print(cowsay.list_cows())
+
+else:
+    if not args.message:
+        print("Error!!! Add the text of the message! ")
+    else:
+        args_dict = vars(args)
+
+        preset = None
+        for k in "bdgpstwy":
+            if args_dict[k]:
+                preset = k
+
+        print(cowsay.cowsay(message=args.message,
+                            cow=args.cow,
+                            preset=preset,
+                            eyes=args.eyes,
+                            tongue=args.tongue,
+                            width=args.width,
+                            wrap_text=args.wrap_text))
