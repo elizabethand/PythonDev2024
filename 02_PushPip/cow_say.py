@@ -1,4 +1,5 @@
 import argparse
+import cowsay
 
 parser = argparse.ArgumentParser()
 
@@ -20,4 +21,7 @@ parser.add_argument("-w", action="store_true")
 parser.add_argument("-y", action="store_true")
 
 args = parser.parse_args()
-print(args)
+# print(args)
+
+if args.l:
+    print(cowsay.list_cows())
