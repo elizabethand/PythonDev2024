@@ -1,6 +1,7 @@
 import random
 import argparse
 import urllib.request
+import cowsay
 
 
 def bullscows(guess: str, secret: str) -> (int, int):
@@ -16,22 +17,23 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
     secret_word = random.choice(words)
     attempts = 1
     print("Игра началась. Слово загадано")
-    print("Если захотите сдаться, введите: \"-\"")
+    print("Если захотите сдаться, введите: \"-\" \n")
     while True:
         guess = ask("Введите слово: ", words)
         bulls, cows = bullscows(guess, secret_word)
         inform("Быки: {}, Коровы: {}", bulls, cows)
         attempts += 1
         if bulls == len(secret_word):
-            print("Победа!!!")
+            print("\nПобеда!!!")
             return attempts
         elif guess == "-":
-            print(f"Поражение... Загаданным словов было: {secret_word}")
-            return attempts
+            print(f"\nПоражение... Загаданным словов было: {secret_word}")
+            return attempts - 1
 
 
 def ask(prompt: str, valid: list[str] = None) -> str:
-    user_input = input(prompt)
+    cow = cowsay.get_random_cow()
+    user_input = input(cowsay.cowsay(prompt, cow=cow)+'\n')
     if valid and user_input not in valid:
         if user_input == "-":
             return user_input
@@ -40,7 +42,8 @@ def ask(prompt: str, valid: list[str] = None) -> str:
     return user_input
 
 def inform(format_string: str, bulls: int, cows: int) -> None:
-    print(format_string.format(bulls, cows))
+    cow = cowsay.get_random_cow()
+    print(cowsay.cowsay(format_string.format(bulls, cows), cow=cow))
 
 def download_dictionary(url: str, length: int) -> list[str]:
     with urllib.request.urlopen(url) as response:
