@@ -1,6 +1,6 @@
 import random
 import argparse
-import urllib
+import urllib.request
 
 
 def bullscows(guess: str, secret: str) -> (int, int):
@@ -16,7 +16,7 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
     secret_word = random.choice(words)
     attempts = 1
     print("Игра началась. Слово загадано")
-    print("Если захотите сдаться, введите: -")
+    print("Если захотите сдаться, введите: \"-\"")
     while True:
         guess = ask("Введите слово: ", words)
         bulls, cows = bullscows(guess, secret_word)
