@@ -1,8 +1,14 @@
 import random
 
 
-def bullscows(guess: str, secret: str) -> tuple[int, int]:
-    pass
+def bullscows(guess: str, secret: str) -> (int, int):
+    bulls, cows = 0, 0
+    for i, c in enumerate(guess):
+        if c == secret[i]:
+            bulls += 1
+        elif c in secret:
+            cows += 1
+    return bulls, cows
 
 def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
     secret_word = random.choice(words)
