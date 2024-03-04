@@ -17,7 +17,11 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
 
 
 def ask(prompt: str, valid: list[str] = None) -> str:
-    pass
+    user_input = input(prompt)
+    if valid and user_input not in valid:
+        print("Wrong. Try again.")
+        return ask(prompt, valid)
+    return user_input
 
 def inform(format_string: str, bulls: int, cows: int) -> None:
     pass
