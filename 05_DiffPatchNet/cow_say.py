@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import asyncio
 import cowsay
 
@@ -113,7 +112,6 @@ async def main():
     server = await asyncio.start_server(handle_chat, '0.0.0.0', 1337)
     async with server:
         print("Server started. Listening for incoming connections...")
-        # await server.serve_forever()
-        await asyncio.gather(server.serve_forever(), *[handle_receive(writer, name) for name, writer in clients.items()])
+        await server.serve_forever()
 
 asyncio.run(main())
