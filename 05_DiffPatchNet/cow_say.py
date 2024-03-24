@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import asyncio
-from cowsay import cowsay, list_cows
+import cowsay
 
 clients = {}
-available_cows = list_cows() + ["cow"]
+available_cows = cowsay.list_cows() + ["cow"]
 
 async def handle_login(writer, name):
     if name == "?":
@@ -16,7 +16,7 @@ async def handle_login(writer, name):
         await writer.drain()
         return None
     elif name not in clients.keys():
-        clients[name] = asyncio.Queue()  # Создаем очередь для пользователя
+        clients[name] = asyncio.Queue()  
         writer.write(f"Welcome, {name}!\n\n".encode())
         available_cows.remove(name)
         await writer.drain()
@@ -32,6 +32,13 @@ async def handle_receive(writer, me):
         message = await clients[me].get()
         writer.write(message.encode())
         await writer.drain()
+
+async def create_cow_cay(me, text):
+    if me == "cow":
+        cow = "default"
+    else:
+        cow = me
+    return cowsay.cowsay(message=text, cow=cow)
 
 async def handle_commands(writer, me, message):
     global available_cows
@@ -51,13 +58,13 @@ async def handle_commands(writer, me, message):
     elif message.startswith("say"):
         print(f"{me}: {message}")
         _, recipient, text = message.split(" ", 2)
-        await clients[recipient].put(f"{me}>>> {text}")
+        await clients[recipient].put(await create_cow_cay(me, text))
 
     elif message.startswith("yield"):
         print(f"{me}: {message}")
         _, text = message.split(" ", 1)
         for client_queue in clients.values():
-            await client_queue.put(f"{me} >>> {text}")
+            await client_queue.put(await create_cow_cay(me, text))
 
     elif message.startswith("quit"):
         writer.write("Goodbye!\n".encode())
@@ -66,12 +73,6 @@ async def handle_commands(writer, me, message):
         available_cows = available_cows + [me]
         del clients[me]
         print(f"<{me.upper()}> has left the chat.")
-
-async def handle_receive(writer, me):
-    while True:
-        message = await clients[me].get()
-        writer.write(message.encode())
-        await writer.drain()
 
 async def handle_chat(reader, writer):
     me = None
